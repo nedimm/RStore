@@ -24,7 +24,7 @@ namespace RStore.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
         {
-            return await _context.Authors.ToListAsync();
+            return Ok(await _context.Authors.ToListAsync());
         }
 
         // GET: api/Authors/5
@@ -38,7 +38,7 @@ namespace RStore.Api.Controllers
                 return NotFound();
             }
 
-            return author;
+            return Ok(author);
         }
 
         // PUT: api/Authors/5
