@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RStore.Api.Data;
+using RStore.Api.Dto.Author;
+using RStore.Api.Static;
 
 namespace RStore.Api.Controllers
 {
@@ -14,22 +17,37 @@ namespace RStore.Api.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly RStoreDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly ILogger<AuthorsController> _logger;
 
-        public AuthorsController(RStoreDbContext context)
+        public AuthorsController(RStoreDbContext context, IMapper mapper, ILogger<AuthorsController> logger)
         {
             _context = context;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorReadOnlyDto>>> GetAuthors()
         {
-            return Ok(await _context.Authors.ToListAsync());
+            try
+            {
+                var authors = await _context.Authors.ToListAsync();
+                var authorDtos = _mapper.Map<IEnumerable<AuthorReadOnlyDto>>(authors);
+                return Ok(authorDtos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error performing GET in {nameof(AuthorsController)}");
+                return StatusCode(500, Messages.Error500Message);
+            }
+            
         }
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(int id)
+        public async Task<ActionResult<AuthorReadOnlyDto>> GetAuthor(int id)
         {
             var author = await _context.Authors.FindAsync(id);
 
@@ -38,19 +56,27 @@ namespace RStore.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(author);
+            return Ok(_mapper.Map<AuthorReadOnlyDto>(author));
         }
 
         // PUT: api/Authors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuthor(int id, Author author)
+        public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDto authorDto)
         {
-            if (id != author.Id)
+            if (id != authorDto.Id)
             {
                 return BadRequest();
             }
 
+            var author = await _context.Authors.FindAsync(id);
+
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(authorDto, author);
             _context.Entry(author).State = EntityState.Modified;
 
             try
@@ -75,8 +101,9 @@ namespace RStore.Api.Controllers
         // POST: api/Authors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Author>> PostAuthor(Author author)
+        public async Task<ActionResult<AuthorCreateDto>> PostAuthor(AuthorCreateDto authorDto)
         {
+            var author = _mapper.Map<Author>(authorDto);
             await _context.Authors.AddAsync(author);
             await _context.SaveChangesAsync();
 

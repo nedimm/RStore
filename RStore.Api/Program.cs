@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RStore.Api.Configurations;
 using RStore.Api.Data;
 using Serilog;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("RStoreDbConnection");
 builder.Services.AddDbContext<RStoreDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
