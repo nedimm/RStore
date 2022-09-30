@@ -53,6 +53,7 @@ namespace RStore.Api.Controllers
 
             if (author == null)
             {
+                _logger.LogWarning($"Record with {id} not found in {nameof(GetAuthor)}");
                 return NotFound();
             }
 
