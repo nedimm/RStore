@@ -64,7 +64,7 @@ namespace RStore.Api.Controllers
             {
                 return BadRequest();
             }
-            
+
             var book = await _context.Books.FindAsync(id);
             if (book == null)
             {
@@ -96,7 +96,7 @@ namespace RStore.Api.Controllers
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(BookCreateDto bookDto)
+        public async Task<ActionResult<BookCreateDto>> PostBook(BookCreateDto bookDto)
         {
             var book = _mapper.Map<Book>(bookDto);
             _context.Books.Add(book);
