@@ -1,44 +1,43 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace RStore.Api.Controllers
+namespace RStore.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    private static readonly string[] Summaries = new[]
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+};
 
-        private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
+    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    {
+        _logger = logger;
+    }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+    [HttpGet(Name = "GetWeatherForecast")]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        _logger.LogInformation("Made call to WeatherForecast");
+        try
         {
-            _logger.LogInformation("Made call to WeatherForecast");
-            try
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateTime.Now.AddDays(index),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-                })
-                .ToArray();
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex, "Fatal Error Occured");
-                throw;
-            }
-            
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
         }
+        catch (Exception ex)
+        {
+
+            _logger.LogError(ex, "Fatal Error Occured");
+            throw;
+        }
+        
     }
 }

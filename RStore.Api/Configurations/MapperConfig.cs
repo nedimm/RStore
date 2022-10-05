@@ -2,6 +2,7 @@
 using RStore.Api.Data;
 using RStore.Api.Dto.Author;
 using RStore.Api.Dto.Book;
+using RStore.Api.Dto.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +27,7 @@ public class MapperConfig : Profile
         CreateMap<Book, BookDetailsDto>()
             .ForMember(q => q.AuthorName, d => d.MapFrom(map => $"{map.Author.Firstname} {map.Author.Lastname}"))
             .ReverseMap();
+
+        CreateMap<ApiUser, RegisterUserDto>().ReverseMap();
     }
 }
