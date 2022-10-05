@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RStore.Api.Data;
 
@@ -11,9 +12,10 @@ using RStore.Api.Data;
 namespace RStore.Api.Migrations
 {
     [DbContext(typeof(RStoreDbContext))]
-    partial class RStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221005135055_SeededDefaultUserAndRoles")]
+    partial class SeededDefaultUserAndRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
