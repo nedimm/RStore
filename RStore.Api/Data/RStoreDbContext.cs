@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace RStore.Api.Data;
 
-public class RStoreDbContext : DbContext
+public class RStoreDbContext : IdentityDbContext<ApiUser>
 {
     public RStoreDbContext()
     {

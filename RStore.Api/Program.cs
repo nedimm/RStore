@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RStore.Api.Configurations;
 using RStore.Api.Data;
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("RStoreDbConnection");
 builder.Services.AddDbContext<RStoreDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddIdentityCore<ApiUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<RStoreDbContext>();
+
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
