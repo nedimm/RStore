@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using RStore.Api.Dto.Book;
 namespace RStore.Api.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class BooksController : ControllerBase
 {
@@ -58,6 +60,7 @@ public class BooksController : ControllerBase
     // PUT: api/Books/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> PutBook(int id, BookUpdateDto bookDto)
     {
         if (id != bookDto.Id)
@@ -96,6 +99,7 @@ public class BooksController : ControllerBase
     // POST: api/Books
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
+    [Authorize(Roles ="Admin")]
     public async Task<ActionResult<BookCreateDto>> PostBook(BookCreateDto bookDto)
     {
         var book = _mapper.Map<Book>(bookDto);
@@ -107,6 +111,7 @@ public class BooksController : ControllerBase
 
     // DELETE: api/Books/5
     [HttpDelete("{id}")]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> DeleteBook(int id)
     {
         var book = await _context.Books.FindAsync(id);

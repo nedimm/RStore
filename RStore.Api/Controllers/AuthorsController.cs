@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace RStore.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AuthorsController : ControllerBase
 {
     private readonly RStoreDbContext _context;
@@ -63,6 +65,7 @@ public class AuthorsController : ControllerBase
     // PUT: api/Authors/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDto authorDto)
     {
         if (id != authorDto.Id)
@@ -102,6 +105,7 @@ public class AuthorsController : ControllerBase
     // POST: api/Authors
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
+    [Authorize(Roles ="Admin")]
     public async Task<ActionResult<AuthorCreateDto>> PostAuthor(AuthorCreateDto authorDto)
     {
         var author = _mapper.Map<Author>(authorDto);
@@ -113,6 +117,7 @@ public class AuthorsController : ControllerBase
 
     // DELETE: api/Authors/5
     [HttpDelete("{id}")]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> DeleteAuthor(int id)
     {
         var author = await _context.Authors.FindAsync(id);
