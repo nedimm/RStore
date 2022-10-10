@@ -1,0 +1,20 @@
+﻿@page "/users/register"
+<h3>Register New Account</h3>
+
+<div class="card-body">
+    <EditForm Model="RegistrationModel" OnValidSubmit="HandleRegistration">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    RegisterUserDto RegistrationModel = new RegisterUserDto();
+    async Task HandleRegistration(){
+        RegistrationModel.Role = "User";
+    }
+}
